@@ -14,5 +14,5 @@ json:
   "pets": 5
 }
 
-star:
+start:
 node src/app.js

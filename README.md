@@ -8,8 +8,11 @@ GET	    /api/users Muestra todos los usuarios almacenados.
 GET	    /api/pets Muestra todas las mascotas almacenadas.
 
 📦 Body para /generateData:
-json
+json:
 {
   "users": 10,
   "pets": 5
 }
+
+star:
+node src/app.js

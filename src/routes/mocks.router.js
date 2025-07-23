@@ -9,10 +9,7 @@ const router = Router();
 
 // GET /api/mocks/mockingusers → generar 50 usuarios ficticios
 router.get('/mockingusers', (req, res) => {
-  const users = [];
-  for (let i = 0; i < 50; i++) {
-    users.push(generateMockUser());
-  }
+  const users = generateMockUsers(50);
   res.json(users);
 });
 
@@ -26,15 +23,17 @@ router.post('/generateData', async (req, res) => {
       const pet = new Pet({
         name: faker.animal.cat(),
         type: faker.animal.type(),
-        age: faker.number.int({ min: 1, max: 15 })
+        age: faker.number.int({ min: 1, max: 15 }),
       });
       await pet.save();
       insertedPets.push(pet._id);
     }
 
-    for (let i = 0; i < users; i++) {
+    const mockUsers = generateMockUsers(users);
+
+    for (const mockUser of mockUsers) {
       const user = new User({
-        ...generateMockUser(),
+        ...mockUser,
         pets: faker.helpers.arrayElements(insertedPets, faker.number.int({ min: 0, max: 3 }))
       });
       await user.save();
@@ -46,5 +45,6 @@ router.post('/generateData', async (req, res) => {
     res.status(500).json({ error: 'Error generando datos.' });
   }
 });
+
 
 export default router;

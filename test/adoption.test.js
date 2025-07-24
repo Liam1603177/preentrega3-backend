@@ -1,23 +1,24 @@
-import request from 'supertest';
 import mongoose from 'mongoose';
+import supertest from 'supertest';
 import app from '../src/app.js';
 import User from '../src/models/User.js';
 import Pet from '../src/models/Pet.js';
 import Adoption from '../src/models/Adoption.js';
-import supertest from 'supertest';
 
 const request = supertest(app);
 
-let server;
 let userId;
 let petId;
 
 beforeAll(async () => {
-  // Conexión a la base de datos de testing
   await mongoose.connect('mongodb://127.0.0.1:27017/test-adoption');
+  await mongoose.connection.asPromise();
 
-  // Crear usuario y mascota para usar en test
-  const user = new User({
+  await Adoption.deleteMany({});
+  await User.deleteMany({});
+  await Pet.deleteMany({});
+
+  const user = await User.create({
     first_name: 'Test',
     last_name: 'User',
     email: 'testuser@example.com',
@@ -25,42 +26,36 @@ beforeAll(async () => {
     role: 'user',
     pets: []
   });
-  await user.save();
   userId = user._id;
 
-  const pet = new Pet({
+  const pet = await Pet.create({
     name: 'Firulais',
-    type: 'dog',
-    age: 3
+    specie: 'Perro',
+    birthDate: '2020-01-01',
   });
-  await pet.save();
   petId = pet._id;
-
-  server = app.listen(4000); // correr app en test
 });
 
 afterAll(async () => {
-  await Adoption.deleteMany({});
-  await User.deleteMany({});
-  await Pet.deleteMany({});
   await mongoose.connection.close();
-  server.close();
 });
 
 describe('Adoption Router', () => {
   it('POST /api/adoptions → debe registrar una adopción', async () => {
-    const response = await request(app)
-      .post('/api/adoptions')
-      .send({ userId, petId });
+    const response = await request.post('/api/adoptions').send({
+      userId,
+      petId,
+      adoptionDate: '2024-01-01'
+    });
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('adoption');
-    expect(response.body.adoption).toHaveProperty('user');
-    expect(response.body.adoption).toHaveProperty('pet');
+    expect(response.body.adoption.user).toBe(userId.toString());
+    expect(response.body.adoption.pet).toBe(petId.toString());
   });
 
   it('GET /api/adoptions → debe devolver las adopciones', async () => {
-    const response = await request(app).get('/api/adoptions');
+    const response = await request.get('/api/adoptions');
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
   });

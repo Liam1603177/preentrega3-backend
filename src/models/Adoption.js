@@ -7,3 +7,5 @@ const adoptionSchema = new mongoose.Schema({
 });
 
 export const Adoption = mongoose.model('Adoption', adoptionSchema);
+
+export default Adoption;

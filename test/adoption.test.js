@@ -1,9 +1,12 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../src/app.js';
-import { User } from '../src/models/User.js';
-import { Pet } from '../src/models/Pet.js';
-import { Adoption } from '../src/models/Adoption.js';
+import User from '../src/models/User.js';
+import Pet from '../src/models/Pet.js';
+import Adoption from '../src/models/Adoption.js';
+import supertest from 'supertest';
+
+const request = supertest(app);
 
 let server;
 let userId;

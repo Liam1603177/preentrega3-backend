@@ -1,6 +1,7 @@
 {
   "type": "module",
   "scripts": {
+    "start": "node src/app.js",
     "test": "jest"
   },
   "dependencies": {
@@ -21,7 +22,14 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.js$": ["babel-jest", { "presets": ["@babel/preset-env"] }]
+      "^.+\\.js$": [
+        "babel-jest",
+        {
+          "presets": [
+            "@babel/preset-env"
+          ]
+        }
+      ]
     }
   }
 }

@@ -45,7 +45,8 @@ Este proyecto incluye una API REST desarrollada con Express y MongoDB, que permi
 
 ⚙️Variables de entorno
 .env
-MONGO_URI=mongodb://host.docker.internal:27017/adopciones
+MONGO_URI=mongodb+srv://<usuario>:<password>@cluster0.xxxx.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 
 
 🐳 Comandos
